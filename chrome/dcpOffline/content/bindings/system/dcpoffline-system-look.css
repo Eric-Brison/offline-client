@@ -20,6 +20,8 @@ dcpChangeStateMenu,
 dcpAdvancedMenu,
 dcpPropertiesMenuItem,
 dcpRevertMenuItem,
+dcpBookMenuItem,
+dcpUnbookMenuItem,
 dcpRemoveMenuItem,
 dcpCancelTransitionMenuItem,
 dcpTransitionMenuItem {

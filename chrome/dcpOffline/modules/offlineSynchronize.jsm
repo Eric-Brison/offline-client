@@ -1052,6 +1052,53 @@ offlineSynchronize.prototype.revertDocument = function(config) {
 };
 
 
+offlineSynchronize.prototype.bookDocument = function(config) {
+
+    if (config && config.domain && config.initid) {
+
+        var domain = config.domain;
+        var document = domain.sync().bookDocument({
+            document : {
+                id : config.initid
+            }
+        });
+        if (document) {
+            this.recordDocument({
+                domain : domain,
+                document : document
+            });
+            this.recordFiles({domain:domain});
+        } else {
+            throw new SyncException("bookDocument failed");
+        }
+    } else {
+        throw new ArgException("bookDocument need domain, initid parameter");
+    }
+};
+
+offlineSynchronize.prototype.unbookDocument = function(config) {
+
+    if (config && config.domain && config.initid) {
+
+        var domain = config.domain;
+        var document = domain.sync().unbookDocument({
+            document : {
+                id : config.initid
+            }
+        });
+        if (document) {
+            this.recordDocument({
+                domain : domain,
+                document : document
+            });
+            this.recordFiles({domain:domain});
+        } else {
+            throw new SyncException("unbookDocument failed");
+        }
+    } else {
+        throw new ArgException("unbookDocument need domain, initid parameter");
+    }
+};
 /**
  * 
  * @param domain
