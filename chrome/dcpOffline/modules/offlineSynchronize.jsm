@@ -1,5 +1,6 @@
 Components.utils.import("resource://modules/logger.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://modules/authentifier.jsm");
 
 Components.utils.import("resource://modules/preferences.jsm");
 Components.utils.import("resource://modules/docManager.jsm");
@@ -10,8 +11,8 @@ Components.utils.import("resource://modules/fdl-data-debug.jsm");
 Components.utils.import("resource://modules/offline-debug.jsm");
 Components.utils.import("resource://modules/utils.jsm");
 Components.utils.import("resource://modules/exceptions.jsm");
-
 Components.utils.import("resource://modules/localDocument.jsm");
+
 // Components.utils.import("chrome://dcpoffline/content/fdl-data-debug.js");
 
 var EXPORTED_SYMBOLS = [ "offlineSync" ];
@@ -783,7 +784,9 @@ offlineSynchronize.prototype.recordDocument = function(config) {
  */
 offlineSynchronize.prototype.pullDocuments = function(config) {
     if (config && config.domain) {
-        this._login=Preferences.get("offline.user.login"); // to optimize access
+      //  this._login=Preferences.get("offline.user.login"); 
+        
+        this._login=authentificator.currentLogin;// to optimize access
         var domain = config.domain;
         // TODO pull all documents and modifies files
         logConsole('pull : ');
@@ -1047,6 +1050,8 @@ offlineSynchronize.prototype.revertDocument = function(config) {
         throw new ArgException("revertDocument need domain, initid parameter");
     }
 };
+
+
 /**
  * 
  * @param domain
