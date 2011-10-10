@@ -27,3 +27,5 @@
 <!ENTITY document.toolbar.button.book.tooltip            "Book">
 <!ENTITY document.toolbar.button.unbook                    "unBook">
 <!ENTITY document.toolbar.button.unbook.tooltip            "unBook">
+<!ENTITY document.toolbar.button.unlink                    "unLink">
+<!ENTITY document.toolbar.button.unlink.tooltip            "unLink">

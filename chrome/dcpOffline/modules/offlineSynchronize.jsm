@@ -788,6 +788,7 @@ offlineSynchronize.prototype.pullDocuments = function(config) {
         
         this._login=authentificator.currentLogin;// to optimize access
         var domain = config.domain;
+        var j=0;
         // TODO pull all documents and modifies files
         logConsole('pull : ');
         this.pullBeginDate=new Date();
@@ -809,7 +810,6 @@ offlineSynchronize.prototype.pullDocuments = function(config) {
             this.callObserver('onDetailLabel',
                     ('recording shared documents : ' + shared.length));
             var onedoc = null;
-            var j = 0;
             for (j = 0; j < shared.length; j++) {
                 onedoc = shared.getDocument(j);
                 this.recordDocument({
@@ -1051,6 +1051,30 @@ offlineSynchronize.prototype.revertDocument = function(config) {
     }
 };
 
+
+offlineSynchronize.prototype.unlinkDocument = function(config) {
+
+    if (config && config.domain && config.initid) {
+
+        var domain = config.domain;
+        var document = domain.sync().unlinkDocument({
+            document : {
+                id : config.initid
+            }
+        });
+        if (document) {
+            this.deleteDocuments({
+                domain : domain,
+                origin:'user',
+                deleteList:[document.getProperty('initid')]
+            });
+        } else {
+            throw new SyncException("removeUserDocument failed");
+        }
+    } else {
+        throw new ArgException("removeUserDocument need domain, initid parameter");
+    }
+};
 
 offlineSynchronize.prototype.bookDocument = function(config) {
 

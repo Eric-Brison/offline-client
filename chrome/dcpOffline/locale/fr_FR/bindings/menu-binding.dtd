@@ -27,3 +27,5 @@
 <!ENTITY document.toolbar.button.book.tooltip            "Pouvoir modifier le document">
 <!ENTITY document.toolbar.button.unbook                    "Enlever la réservation">
 <!ENTITY document.toolbar.button.unbook.tooltip            "Passer le document en lecture seule">
+<!ENTITY document.toolbar.button.unlink                    "Enlever">
+<!ENTITY document.toolbar.button.unlink.tooltip            "Enlever le document de mon espace">

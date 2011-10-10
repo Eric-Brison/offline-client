@@ -439,7 +439,51 @@
              ]]></constructor>
         </implementation>
     </binding>
+   <binding
+        id="unlink-menuitem"
+        extends="&systemBindingsDirPath;/menus.xml#doc-main-menu-menuitem">
+        <content>
+            <xul:menuitem
+                anonid="button"
+                label="&document.toolbar.button.unlink;"
+                tooltiptext="&document.toolbar.button.unlink.tooltip;"
+                icon="clear"
+                collapsed="false" />
+        </content>
+        <implementation>
+            <property
+                name="customDisableCondition"
+                readonly="true">
+                <getter><![CDATA[
+                  return true;
+                ]]></getter>
+            </property>
 
+            <method name="doAction">
+                <parameter name="event" />
+                <body><![CDATA[
+                    document.commandDispatcher.advanceFocus();
+                    this.documentNode.unlink();
+                ]]></body>
+            </method>
+            
+            <constructor><![CDATA[
+                  if (networkChecker.isOffline()) {
+                     button.setAttribute('tooltiptext',this.translate('document.toolbar.button.unlink.disabled.nonetwork'));
+                  } else if (this.doc.isOnlyLocal()) {
+                         button.setAttribute('tooltiptext',this.translate('document.toolbar.button.unlink.disabled.onlylocal'));
+                  } else if (this.doc.isModified()) {
+                         button.setAttribute('tooltiptext',this.translate('document.toolbar.button.unlink.disabled.ismodified'));
+                  } else if (! this.doc.isFromUserFolder()) {
+                         button.setAttribute('tooltiptext',this.translate('document.toolbar.button.unlink.disabled.nofromuser'));
+                  } else {
+                         button.disabled = false;
+                         this.disabled=false;
+                  }
+                  
+             ]]></constructor>
+        </implementation>
+    </binding>
     <binding
         id="book-menuitem"
         extends="&systemBindingsDirPath;/menus.xml#doc-main-menu-menuitem">
@@ -625,6 +669,7 @@
                     <xul:dcpBookMenuItem />
                     <xul:dcpUnbookMenuItem />
                     <xul:dcpRemoveMenuItem />
+                    <xul:dcpUnlinkMenuItem />
                 </xul:menupopup>
             </xul:toolbarbutton>
         </content>
