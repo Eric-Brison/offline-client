@@ -253,13 +253,18 @@
                             var domain = context.getDocument({
                                 id : domainId
                             });
+                            var docid=this.initid;
+                            var me=this;
                             offlineSync.revertDocument({
                                 domain: domain,
-                                initid: this.initid
+                                initid: this.initid,
+                                onAfterRevert:function() {
+                                   me.reinit();
+                                   applicationEvent.publish("postSynchronize",{});
+                                   tryToOpenDocument({documentId : docid});
+                                }
                             });
-                            var docid=this.initid;
-                            this.reinit();
-                           // tryToOpenDocument({documentId : docid});
+                            
                         } catch(e) {
                             logError(e, "error when reverting document "+this.initid);
                         }
@@ -282,14 +287,16 @@
                             var domain = context.getDocument({
                                 id : domainId
                             });
+                            var me=this;
                             offlineSync.unlinkDocument({
                                 domain: domain,
-                                initid: this.initid
+                                initid: this.initid,
+                                onAfterUnlink:function() {
+                                   me.reinit();
+                                   applicationEvent.publish("postSynchronize",{});
+                                }
                             });
-                            
-                            var docid=this.initid;
-                            this.reinit();
-                           // tryToOpenDocument({documentId : docid});
+                                                        
                         } catch(e) {
                             logError(e, "error when booking document "+this.initid);
                         }
@@ -311,15 +318,19 @@
                             var domain = context.getDocument({
                                 id : domainId
                             });
-                            offlineSync.bookDocument({
-                                domain: domain,
-                                initid: this.initid
-                            });
                             
                             var docid=this.initid;
-                            this.reinit();
-                             applicationEvent.publish("postSynchronize",{});
-                            tryToOpenDocument({documentId : docid});
+                            var me=this;
+                            offlineSync.bookDocument({
+                                domain: domain,
+                                initid: this.initid,
+                                onAfterBook:function() {
+                                   me.reinit();
+                                   applicationEvent.publish("postSynchronize",{});
+                                   tryToOpenDocument({documentId : docid});
+                                }
+                            });
+                            
                         } catch(e) {
                             logError(e, "error when booking document "+this.initid);
                         }
@@ -342,15 +353,20 @@
                             var domain = context.getDocument({
                                 id : domainId
                             });
+                            var docid=this.initid;
+                            var me=this;
                             offlineSync.unbookDocument({
                                 domain: domain,
-                                initid: this.initid
+                                initid: this.initid,
+                                
+                                onAfterUnbook:function() {
+                                   me.reinit();
+                                   applicationEvent.publish("postSynchronize",{});
+                                   tryToOpenDocument({documentId : docid});
+                                }
                             });
                             
-                            var docid=this.initid;
-                            this.reinit();
-                             applicationEvent.publish("postSynchronize",{});
-                            tryToOpenDocument({documentId : docid});
+                        
                         } catch(e) {
                             logError(e, "error when booking document "+this.initid);
                         }

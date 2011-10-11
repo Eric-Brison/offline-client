@@ -754,6 +754,9 @@ offlineSynchronize.prototype.recordDocument = function(config) {
                                                 me.updateTitles({
                                                     document : document
                                                 });
+                                                if (config.onAfterRecord) {
+                                                    config.onAfterRecord(me);
+                                                }
                                             }
                                         }
                                     });
@@ -892,6 +895,9 @@ offlineSynchronize.prototype.deleteDocuments = function(config) {
                             query :"delete from docsbydomain where not docsbydomain.isshared and not docsbydomain.isusered"});
                         storageManager.execQuery({
                             query :"delete from documents where initid not in (select initid from docsbydomain)"});
+                        if (config.onAfterUnlink) {
+                            config.onAfterUnlink(config.deleteList);
+                        }
                     }
             };
 
@@ -1032,6 +1038,21 @@ offlineSynchronize.prototype.updateEnumItems = function(config) {
         throw new ArgException("updateTitles need document parameter");
     }
 };
+
+/**
+ * revert a document from server. The local document is replaced by server document
+ * 
+ * @param {Object}
+ *            config
+ *            <ul>
+ *            <li><b>domain : </b>{Fdl.OfflineDomain} the domain</li>
+ *            <li><b>initid : </b>{Numeric} the document identificator</li>
+ *            <li><b>onAfterRevert : </b>{Function} a callback called after the revert</li>
+ *            </ul>
+ * @throws SyncException is synchronize error
+ * @throws ArgException if missing argument
+ * @return void
+ */
 offlineSynchronize.prototype.revertDocument = function(config) {
 
     if (config && config.domain && config.initid) {
@@ -1045,7 +1066,8 @@ offlineSynchronize.prototype.revertDocument = function(config) {
         if (document) {
             this.recordDocument({
                 domain : domain,
-                document : document
+                document : document,
+                onAfterRecord:config.onAfterRevert
             });
             this.recordFiles({domain:domain});
         } else {
@@ -1057,6 +1079,20 @@ offlineSynchronize.prototype.revertDocument = function(config) {
 };
 
 
+/**
+ * unlink a document into user folder space. The local document is deleted
+ * 
+ * @param {Object}
+ *            config
+ *            <ul>
+ *            <li><b>domain : </b>{Fdl.OfflineDomain} the domain</li>
+ *            <li><b>initid : </b>{Numeric} the document identificator</li>
+ *            <li><b>onAfterUnlink : </b>{Function} a callback called after the deletion</li>
+ *            </ul>
+ * @throws SyncException is synchronize error
+ * @throws ArgException if missing argument
+ * @return void
+ */
 offlineSynchronize.prototype.unlinkDocument = function(config) {
 
     if (config && config.domain && config.initid) {
@@ -1071,7 +1107,8 @@ offlineSynchronize.prototype.unlinkDocument = function(config) {
             this.deleteDocuments({
                 domain : domain,
                 origin:'user',
-                deleteList:[document.getProperty('initid')]
+                deleteList:[document.getProperty('initid')],
+                onAfterUnlink:config.onAfterUnlink
             });
         } else {
             throw new SyncException("removeUserDocument failed");
@@ -1081,6 +1118,20 @@ offlineSynchronize.prototype.unlinkDocument = function(config) {
     }
 };
 
+/**
+ * book a document user folder space. Insert document in user folder if not yet included 
+ * 
+ * @param {Object}
+ *            config
+ *            <ul>
+ *            <li><b>domain : </b>{Fdl.OfflineDomain} the domain</li>
+ *            <li><b>initid : </b>{Numeric} the document identificator</li>
+ *            <li><b>onAfterBook : </b>{Function} a callback called after the booking</li>
+ *            </ul>
+ * @throws SyncException is synchronize error
+ * @throws ArgException if missing argument
+ * @return void
+ */
 offlineSynchronize.prototype.bookDocument = function(config) {
 
     if (config && config.domain && config.initid) {
@@ -1094,7 +1145,8 @@ offlineSynchronize.prototype.bookDocument = function(config) {
         if (document) {
             this.recordDocument({
                 domain : domain,
-                document : document
+                document : document,
+                onAfterRecord:config.onAfterBook
             });
             this.recordFiles({domain:domain});
         } else {
@@ -1104,7 +1156,20 @@ offlineSynchronize.prototype.bookDocument = function(config) {
         throw new ArgException("bookDocument need domain, initid parameter");
     }
 };
-
+/**
+ * unbook a document user folder space. The documentg stay in user folder
+ * 
+ * @param {Object}
+ *            config
+ *            <ul>
+ *            <li><b>domain : </b>{Fdl.OfflineDomain} the domain</li>
+ *            <li><b>initid : </b>{Numeric} the document identificator</li>
+ *            <li><b>onAfterUnbook : </b>{Function} a callback called after the unbooking</li>
+ *            </ul>
+ * @throws SyncException is synchronize error
+ * @throws ArgException if missing argument
+ * @return void
+ */
 offlineSynchronize.prototype.unbookDocument = function(config) {
 
     if (config && config.domain && config.initid) {
@@ -1118,7 +1183,8 @@ offlineSynchronize.prototype.unbookDocument = function(config) {
         if (document) {
             this.recordDocument({
                 domain : domain,
-                document : document
+                document : document,
+                onAfterRecord:config.onAfterUnbook
             });
             this.recordFiles({domain:domain});
         } else {

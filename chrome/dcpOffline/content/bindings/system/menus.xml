@@ -501,17 +501,6 @@
                 readonly="true">
                 <getter><![CDATA[
                   return true;
-                logConsole('book menu');
-                    if (this.doc.isOnlyLocal()) return true;
-                                    logConsole('book menu locl');
-                    
-                    if (this.doc.isModified()) return true;
-                                    logConsole('book menu mod');
-                    
-                    if (parseInt(this.doc.getProperty('locked'))==0) return false; 
-                                    logConsole('book menu lock'+this.doc.getProperty('locked'));
-                    
-                    return true;
                 ]]></getter>
             </property>
 
