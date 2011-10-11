@@ -34,6 +34,13 @@ offlineSynchronize.prototype = {
     }
 };
 
+offlineSynchronize.prototype.getLogin = function() {
+    if (! this._login) {
+        this._login=authentificator.currentLogin;// to optimize access
+    }
+    return this._login;
+}
+
 offlineSynchronize.prototype.getCore = function() {
     if (!this.offlineCore) {
         this.offlineCore = new Fdl.OfflineCore({
@@ -710,7 +717,7 @@ offlineSynchronize.prototype.recordDocument = function(config) {
                             if (domainFolders.indexOf('offshared_'+domainRef) >=0) {
                                 isShared=true;
                             }
-                            if (domainFolders.indexOf('offuser_'+domainRef+'_'+me._login) >=0) {
+                            if (domainFolders.indexOf('offuser_'+domainRef+'_'+me.getLogin()) >=0) {
                                 isUsered=true;
                             }
                             storageManager
@@ -784,9 +791,7 @@ offlineSynchronize.prototype.recordDocument = function(config) {
  */
 offlineSynchronize.prototype.pullDocuments = function(config) {
     if (config && config.domain) {
-      //  this._login=Preferences.get("offline.user.login"); 
         
-        this._login=authentificator.currentLogin;// to optimize access
         var domain = config.domain;
         var j=0;
         // TODO pull all documents and modifies files
