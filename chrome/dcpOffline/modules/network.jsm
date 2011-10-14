@@ -8,6 +8,7 @@ var EXPORTED_SYMBOLS = ["networkChecker"];
 
 var networkChecker = {
         isOffline : function() {
+            return false;
             try {
                 var linkService = Cc["@mozilla.org/network/network-link-service;1"]
                 .getService(Ci.nsINetworkLinkService);
